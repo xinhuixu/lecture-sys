@@ -1,0 +1,59 @@
+body {
+    color: black;
+    text-align: center;
+}
+
+.home-form {
+    width: 85%;
+    margin: auto;
+}
+
+.full {
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-group {
+    width:100%;
+}
+
+.btn {
+    width: 50%;
+    font-weight: bold;
+}
+
+#login-header {
+    font-family: "HEADER";
+    font-size: 3em;
+    font-style: italic;
+}
+
+#login {
+}
+
+.vertical-flex {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: column;
+   flex-direction: column;
+}
+
+.logo{
+    position: absolute;
+    left:5%;
+    top:5%;
+}
+
+.logo-text{
+    color: black;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+.btn-index {
+    margin: 0.75em;
+}
