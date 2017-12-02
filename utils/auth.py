@@ -52,3 +52,12 @@ def get_id_from_username(username):
     if len(res) == 0:
         return None
     return res[0][0]
+
+
+def get_user_type(username):
+    db = connect(f)
+    c = db.cursor()
+    res = c.execute('SELECT user_type from users WHERE username==\"%s\"' % (username)).fetchall()
+    if len(res) == 0:
+        return None
+    return res[0][0]

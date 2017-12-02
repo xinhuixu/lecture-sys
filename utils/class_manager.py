@@ -1,5 +1,5 @@
 from sqlite3 import connect
-import datetime
+import datetime, random, string
 
 def get_new_class_id():
     db = connect('Data/general.db')
@@ -26,10 +26,12 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
 
     new_id = get_new_class_id()
     days = ','.join(d for d in days)
+    code = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for x in range(8))
+    
     db = connect('Data/%d.db' % (new_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
-    c.execute('INSERT INTO info VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"\")' % (class_name,instructor_name,days,time_start,time_end))
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
+    c.execute('INSERT INTO info VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"\",\"%s\")' % (class_name,instructor_name,days,time_start,time_end,code))
     db.commit()    
     db.close()
     update_max_class_ids(new_id)
@@ -62,7 +64,7 @@ def delete_review_category(class_id,category):
 def get_class_info(class_id):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     res = c.execute('SELECT * from info').fetchall()[0]
     info = {}
     info['class_name'] = res[0]
@@ -76,7 +78,7 @@ def get_class_info(class_id):
 def is_class_in_session(class_id):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     res =  c.execute('SELECT time_start, time_end from info').fetchall()
     if len(res) == 0:
         return None
@@ -104,8 +106,10 @@ def add_user_to_class(class_id,user_id):
     max_id = c.execute('SELECT MAX(class_user_id) from students').fetchall()[0][0]
     if max_id == None:
         c.execute('INSERT INTO students VALUES(%d,%d)' % (user_id,0))
+        max_id = 0
     else:
         c.execute('INSERT INTO students VALUES(%d,%d)' % (user_id,max_id+1))
+        max_id += 1
     db.commit()
     db.close()
 
@@ -113,13 +117,14 @@ def add_user_to_class(class_id,user_id):
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS users(username STRING, password STRING, user_type STRING, email STRING, user_id INTEGER, class_ids STRING)')
     res = c.execute('SELECT class_ids from users WHERE user_id==%d' % (user_id)).fetchall()
+
     if len(res) == 0:
         return 'Error'
 
     if res[0][0] == '':
-        new_class_ids = '%d:%d' % (class_id,max_id+1)
+        new_class_ids = '%d:%d' % (class_id,max_id)
     else:
-        new_class_ids = res[0][0] + ',%d:%d' % (class_id,max_id+1)
+        new_class_ids = res[0][0] + ',%d:%d' % (class_id,max_id)
 
     c.execute('UPDATE users SET class_ids=\"%s\" WHERE user_id==%d' % (new_class_ids,user_id))
         
@@ -183,7 +188,7 @@ def get_first_class_date(date,days):
 def get_reviews(class_id,date,mode='day'):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
     res = c.execute('SELECT days,time_start,categories from info').fetchall()
     
@@ -245,14 +250,17 @@ add_review_category(0,'relevance')
 add_review_category(0,'clarity')
 delete_review_category(0,'relevance')
 
-#these users need to be created first
-add_user_to_class(0,123)
-add_user_to_class(0,345)
-add_user_to_class(0,666)
+auth.add_user('one','pass','student','a@a.com')
+auth.add_user('two','pass','student','a@a.com')
+auth.add_user('three','pass','student','a@a.com')
 
-add_review(0,{'volume':3,'clarity':3},'hello',123)
-add_review(0,{'volume':2,'clarity':3},'world',345)
-add_review(0,{'volume':3,'clarity':1},'everyone',666)
+add_user_to_class(0,0)
+add_user_to_class(0,1)
+add_user_to_class(0,2)
+
+print add_review(0,{'volume':3,'clarity':3},'hello',0)
+print add_review(0,{'volume':2,'clarity':3},'world',1)
+print add_review(0,{'volume':3,'clarity':1},'everyone',2)
 
 print get_reviews(0,'2017-12-01')
 '''
@@ -279,7 +287,7 @@ print get_reviews(0,'2017-12-01')
 def get_day_reviews(class_id,date):
     db = connect('Data/%s.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
     res = c.execute('SELECT days,time_start,categories from info').fetchall()
     
@@ -325,7 +333,7 @@ def get_day_reviews(class_id,date):
 def get_week_reviews(class_id,date):
     db = connect('Data/%s.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
     res = c.execute('SELECT days,time_start,categories from info').fetchall()
     
@@ -376,7 +384,7 @@ def get_week_reviews(class_id,date):
 def get_month_reviews(class_id,date):
     db = connect('Data/%s.db' % (class_id))
     c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
     res = c.execute('SELECT days,time_start,categories from info').fetchall()
     
