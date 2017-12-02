@@ -73,6 +73,16 @@ def get_class_info(class_id):
     info['categories'] = res[5].split(',')
 
 
+def is_class_in_session(class_id):
+    db = connect('Data/%d.db' % (class_id))
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    res =  c.execute('SELECT time_start, time_end from info').fetchall()
+    if len(res) == 0:
+        return None
+    return res[0][0] <= str(datetime.datetime.now.time()) and res[0][1] >= str(datetime.datetime.now.time())
+    
+       
 def get_user_classes(user_id):
     db = connect('Data/general.db')
     c = db.cursor()
