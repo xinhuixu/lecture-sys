@@ -81,7 +81,8 @@ def review(class_id):
         return redirect('/');
    
     info = cm.get_class_info(int(class_id))
-    return render_template('review.html', info=info);        
+    info['days'] = '-'.join(d for d in info['days'])
+    return render_template('review.html', info=info, live=cm.is_class_in_session(int(class_id)));        
 
 #teacher only!
 @app.route('/class_home/<class_id>')
@@ -98,7 +99,7 @@ def class_home(class_id):
     info['code'] = res[6]
     '''
     info = cm.get_class_info(int(class_id))    
-    return render_template('class_home.html', info=info, cid=class_id );
+    return render_template('class_home.html', info=info, cid=class_id, live=cm.is_class_in_session(int(class_id)));
 
 @app.route('/add_course/', methods=['GET','POST'])
 def add_course():
