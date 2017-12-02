@@ -7,10 +7,11 @@
   </head>
 
   <body>
+    <div class="logout">
+      <a href="/logout/" class="btn btn-link">Log out</a>
+    </div>
+
     <div class="full container-fluid">
-      <div class="logout">
-	<a href="/logout/" class="btn btn-link">Log out</a>
-      </div>
 
 	  <h1>My Courses</h1>
 	  <div class="card">
@@ -22,9 +23,9 @@
 		<button type="submit" class="btn btn-primary">Join course</button>
 	      </form>
 	    </div>
+	    <div class="btn-group-vertical" role="group">
 	  {% for c in course_names %}
-	  <div class="btn-group-vertical btn-group-lg" role="group">
-	    <button type="button" class="btn btn-dark">{{ course_names[c] }}</button>
+	    <a href="/{{c}}" class="btn btn-dark">{{ course_names[c] }}</button>
 	    {% endfor %}
 
 	  </div><!--end GROUP-->

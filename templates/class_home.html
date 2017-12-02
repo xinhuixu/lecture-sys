@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Class portal</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+  </head>
+
+  <body>
+    <div class="full container-fluid">
+      <div class="row">
+	<div class="col-sm-12">
+	  
+	  <div class="card" style="width:25rem">
+	    <div class="card-header">
+
+	      <h3>Class portal<span class="text-secondary">(Class is live!)</span></h3>
+	    </div>
+	    <div class="card-body">
+	      
+	      <div class="d-flex justify-content-between">
+		<h4 class="card-title">{{ info['class_name'] }}</h4>
+		<div class="d-flex flex-column">
+		  <h6 class="card-subtitle mb-2 text-muted">Instructor: {{info['instructor_name']}}</h6>
+		  <h6 class="card-subtitle mb-2 text-muted">Meets:
+		    {% for d in info['days'] %}
+		    {{d}}
+		    {% endfor %}
+		    {{info['time_start']}}-{{info['time_end']}}</h6>
+		</div>
+	      </div>
+	      <br>
+		<a href="class_data/{{cid}}" class="btn btn-primary btn-lg btn-block">
+		  View data
+		</a>
+		<a href="edit_class/{{cid}}" class="btn btn-lg btn-light btn-block">
+		  Edit course
+		</a>
+
+	    </div>	
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

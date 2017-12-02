@@ -76,9 +76,29 @@ def teacher_home():
 
 
 @app.route('/review/<class_id>')
-def review():
-    return render_template('review.html', course = class_id);        
+def review(class_id):
+    if 'username' not in session:
+        return redirect('/');
+   
+    info = cm.get_class_info(int(class_id))
+    return render_template('review.html', info=info);        
 
+#teacher only!
+@app.route('/class_home/<class_id>')
+def class_home(class_id):
+    if 'username' not in session:
+        return redirect('/');
+    '''
+    info['class_name'] = res[0]
+    info['instructor_name'] = res[1]
+    info['days'] = res[2].split(',')
+    info['time_start'] = res[3]
+    info['time_end'] = res[4]
+    info['categories'] = res[5].split(',')
+    info['code'] = res[6]
+    '''
+    info = cm.get_class_info(int(class_id))    
+    return render_template('class_home.html', info=info, cid=class_id );
 
 @app.route('/add_course/', methods=['GET','POST'])
 def add_course():
