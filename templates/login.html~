@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="/static/js/xinhuisayshi.js"></script>-->
+    <link rel="stylesheet" href="../static/css/style.css">
+  </head>
+
+  <body>
+    <div class="full container-fluid">
+
+      <div class="about">
+	<div class="row">
+	  <div class="card">
+
+	    <h3 id="login-header" class="card-header text-center">Lecc</h3>
+	    <div class="card-block">
+	      <h4 class="card-title"><a href="/register">Not registered yet?</a></h4>
+	      {% if msg is defined %}
+	      {% if good %}
+	      <div class="alert alert-success alert-dismissible fade show" role="alert">
+		{% else %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		  {% endif %}
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  {{msg}}
+		</div>
+		
+		{% endif %}
+
+		<form class="form-horizontal" name="auth" action="/login" method="POST">
+		  <div class="form-group">
+		    <input class="form-control" placeholder="Username" type="text" name="user">
+		  </div>
+		  
+		  <div class="form-group">
+		    <input class="form-control" placeholder="Password" type="password" name="pass">
+		    
+		  </div>
+		  
+		  <div class="btn-group" role="group" style="margin:auto;"  aria-label="auth">
+		    <button id="login" type="submit" name="login" value="Login" class="btn btn-secondary">Login</button>
+		    
+		  </div>    
+		</form>
+		
+	      </div>
+	    </div>
+	  </div>
+	</div>
+  </body>
+</html>

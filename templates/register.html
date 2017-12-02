@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+  </head>
+
+  <body>
+    <div class="full container-fluid">
+
+      <div class="about">
+	<div class="row">
+	  <div class="card">
+
+	    <h3 id="login-header" class="card-header text-center">Lecc</h3>
+	    <div class="card-block">
+	      <div class="card-body">
+		<!--	      {% if msg is defined %}
+			      {% if good %}
+			      <div class="alert alert-success alert-dismissible fade show" role="alert">
+				{% else %}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				  {% endif %}
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				  {{msg}}
+				</div>
+				
+				{% endif %}-->
+
+		<form class="form-horizontal" name="auth" action="/login" method="POST">
+		  <div class="form-group">
+		    <input class="form-control" placeholder="Username" type="text" name="username">
+		  </div>
+		  
+		  <div class="form-group">
+		    <input class="form-control" placeholder="Password" type="password" name="password">
+		    
+		  </div>
+		  
+		  <!--SHOULD BE A RADIO BUTTON-->
+		  <div class="form-check form-check-inline">
+		    <label class="form-check-label">
+		      <input class="form-check-input" type="radio" name="usertype" id="teacher" value="teacher"> Teacher
+		    </label>
+		  </div>
+		  <div class="form-check form-check-inline">
+		    <label class="form-check-label">
+		      <input class="form-check-input" type="radio" name="usertype" id="student" value="student"> Student
+		    </label>
+		  </div>
+
+		  
+		  
+		  <button id="register" type="submit" name="register" value="register" class="btn btn-primary btn-lg btn-block">Register</button>		    
+
+		</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+  </body>
+</html>
