@@ -43,3 +43,12 @@ def login(username,password):
     db.close()
     return success
 
+
+def get_id_from_username(username):
+    db = connect(f)
+    c = db.cursor()
+    res = c.execute('SELECT user_id from users WHERE username==/"%s/"' % (username)).fetchall()
+
+    if len(res) == 0:
+        return None
+    return res[0][0]
