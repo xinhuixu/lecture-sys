@@ -52,7 +52,7 @@ def get_id_from_username(username):
 
     if len(res) == 0:
         return None
-    return res[0][0]
+    return int(res[0][0])
 
 
 def get_user_type(username):

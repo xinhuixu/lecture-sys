@@ -17,15 +17,14 @@ def mainpage():
         if auth.get_user_type(session['username']) == 'student':
             user = session['username']
             courses = cm.get_user_classes(auth.get_id_from_username(user))
-            course_names = {c:get_class_info(c)['class_name'] for c in courses}
-            print course_names
+            course_names = {c:cm.get_class_info(c)['class_name'] for c in courses}
             return render_template('student_home.html', user=user, course_names = course_names)
         
         elif auth.get_user_type(session['username']) == 'teacher':
             user = session['username']
             courses = cm.get_user_classes(auth.get_id_from_username(user))
-            course_names = {c:get_class_info(c)['class_name'] for c in courses}
-            print course_names
+            print str(courses)
+            course_names = {c:cm.get_class_info(c)['class_name'] for c in courses}
             return render_template('teacher_home.html', user=user, course_names=course_names)
         else:
             return 'Error'
