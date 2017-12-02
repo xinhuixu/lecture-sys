@@ -1,12 +1,10 @@
-from flask import Flask, render_template, request, session, url_for, redirect, register, review, flash, class_data, class_home, edit_class
+from flask import Flask, render_template, request, session, url_for
 from utils import auth, classes_manager
 import sqlite3
 import os
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
-
 
 @app.route('/')
 def mainpage(): 
