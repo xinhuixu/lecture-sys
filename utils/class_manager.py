@@ -44,6 +44,14 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     db.close()
     
 
+def get_categories(class_id):
+    db = connect('Data/%d.db' % (class_id))
+    c = db.cursor()
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return None
+    return res[0][0]
+
 def add_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
