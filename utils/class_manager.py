@@ -123,11 +123,11 @@ def get_first_class_date(date,days):
     date = datetime.datetime.strptime(date,'%Y-%m-%d')
     days_behind = date.weekday() - weekday_str_to_num[days[0]]
     return date - datetime.timedelta(days_behind)
-    
-    
-#not really needed, could just simply call get_reviews and use the scores key to find averages from there
+
+
 #assuming date is is yyyy-mm-dd format
-def get_review_averages(class_id,date):
+#mode is day/week/month
+def get_reviews(class_id,date,mode='day'):
     db = connect('Data/%s.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
@@ -142,27 +142,88 @@ def get_review_averages(class_id,date):
     days = res[0].split(',')
     start_time = res[1]
     categories = res[2].split(',')
-    next_class_date = get_next_class_date(date,days)
     time_split = start_time.split(':')
+    next_class_date = get_next_class_date(date,days)
     next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
-    scores = {c:[] for c in categories}
-    full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M'))
+
+    if mode == 'day':
+        full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M'))
+    elif mode == 'week':
+        first_class_date = get_first_class_date(date,days)
+        first_class_date = first_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
+        full_c_datetime_string = str(first_class_date)
+    elif mode == 'month':
+        full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M')).replace(day=1)
+        
     full_n_datetime_string = str(next_class_date)
-    res = c.execute('SELECT scores from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
+    res = c.execute('SELECT * from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
 
     if len(res) == 0:
         return None
+
+    reviews = []
+    averages = {c:[] for c in categories}
     
     for entry in res:
-        scores_entry = entry[0].split(',')
-        for e in scores_entry:
-            info_split = e.split(':')
-            scores[info_split[0]].append(int(info_split[1]))
+        info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
+        info['user'] = entry[4]
+        info['comments'] = entry[3]
+        score_list = entry[2].split(',')
+        scores = {}
+        for score in score_list:
+            split_parts = score.split(':')
+            scores[split_parts[0]] = int(split_parts[1])
+            averages[split_parts[0]].append(int(split_parts[1]))
+        info['scores'] = scores
+        reviews.append(info)
 
-    scores = {c:sum(scores[c])/float(len(scores[c])) for c in scores}
-    return scores
+    averages = {c:sum(averages[c])/float(len(averages[c])) for c in averages}
+    return (reviews,averages)
 
-def get_reviews(class_id,date):
+
+
+
+'''
+create_class('sample','me',['M','W','F'],'10:00','10:53')
+add_review_category(0,'volume')
+add_review_category(0,'relevance')
+add_review_category(0,'clarity')
+delete_review_category(0,'relevance')
+
+
+add_user_to_class(0,123)
+add_user_to_class(0,345)
+add_user_to_class(0,666)
+
+add_review(0,{'volume':3,'clarity':3},'hello',123)
+add_review(0,{'volume':2,'clarity':3},'world',345)
+add_review(0,{'volume':3,'clarity':1},'everyone',666)
+
+print get_reviews(0,'2017-12-01')
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+#DEPRECATED
+
+def get_day_reviews(class_id,date):
     db = connect('Data/%s.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
@@ -180,7 +241,6 @@ def get_reviews(class_id,date):
     next_class_date = get_next_class_date(date,days)
     time_split = start_time.split(':')
     next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
-    scores = {c:[] for c in categories}
     full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M'))
     full_n_datetime_string = str(next_class_date)
     res = c.execute('SELECT * from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
@@ -189,19 +249,25 @@ def get_reviews(class_id,date):
         return None
 
     reviews = []
+    averages = {c:[] for c in categories}
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
+        scores = {}
         for score in score_list:
             split_parts = score.split(':')
-            scores[split_parts[0]].append(int(split_parts[1]))
+            scores[split_parts[0]] = int(split_parts[1])
+            averages[split_parts[0]].append(int(split_parts[1]))
         info['scores'] = scores
         reviews.append(info)
 
-    return reviews
+    averages = {c:sum(averages[c])/float(len(averages[c])) for c in averages}
+    return (reviews,averages)
 
 def get_week_reviews(class_id,date):
     db = connect('Data/%s.db' % (class_id))
@@ -223,7 +289,6 @@ def get_week_reviews(class_id,date):
     time_split = start_time.split(':')
     first_class_date = first_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
     next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
-    scores = {c:[] for c in categories}
     full_c_datetime_string = str(first_class_date)
     full_n_datetime_string = str(next_class_date)
     res = c.execute('SELECT * from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
@@ -232,19 +297,25 @@ def get_week_reviews(class_id,date):
         return None
 
     reviews = []
+    averages = {c:[] for c in categories}
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
+        scores = {}
         for score in score_list:
             split_parts = score.split(':')
-            scores[split_parts[0]].append(int(split_parts[1]))
+            scores[split_parts[0]] = int(split_parts[1])
+            averages[split_parts[0]].append(int(split_parts[1]))
         info['scores'] = scores
         reviews.append(info)
-
-    return reviews
+    averages = {c:sum(averages[c])/float(len(averages[c])) for c in averages}
+        
+    return (reviews,averages)
 
 
 
@@ -267,7 +338,6 @@ def get_month_reviews(class_id,date):
     next_class_date = get_next_class_date(date,days)
     time_split = start_time.split(':')
     next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
-    scores = {c:[] for c in categories}
     full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M')).replace(day=1)
     full_n_datetime_string = str(next_class_date)
     res = c.execute('SELECT * from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
@@ -276,35 +346,25 @@ def get_month_reviews(class_id,date):
         return None
 
     reviews = []
+    averages = {c:[] for c in categories}
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
+        scores = {}
         for score in score_list:
             split_parts = score.split(':')
-            scores[split_parts[0]].append(int(split_parts[1]))
+            scores[split_parts[0]] = int(split_parts[1])
+            averages[split_parts[0]].append(int(split_parts[1]))
         info['scores'] = scores
         reviews.append(info)
 
-    return reviews
-
-
+    averages = {c:sum(averages[c])/float(len(averages[c])) for c in averages}
+    return (reviews,averages)
 '''
-create_class('sample','me',['M','W','F'],'10:00','10:53')
-add_review_category(0,'volume')
-add_review_category(0,'relevance')
-add_review_category(0,'clarity')
-delete_review_category(0,'relevance')
 
 
-add_user_to_class(0,123)
-add_user_to_class(0,345)
-add_user_to_class(0,666)
-
-add_review(0,{'volume':3,'clarity':3},'hello',123)
-add_review(0,{'volume':2,'clarity':3},'world',345)
-add_review(0,{'volume':3,'clarity':1},'everyone',666)
-
-'''
