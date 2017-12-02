@@ -10,9 +10,10 @@
     <div class="full container-fluid">
       
 	  <h1>My Courses</h1>
-	 <a href="/add_course" class="btn btn-primary" role="button">New course</a><br>
+	  <a href="/add_course" class="btn btn-primary" role="button">New course</a><br>
+	  {% for cn in course_names %}
 	  <div class="btn-group-vertical btn-group-lg" role="group">
-	    <button type="button" class="btn btn-dark">1</button>
+	    <button type="button" class="btn btn-dark">{</button>
 	    <button type="button" class="btn btn-dark">2</button>
 	    <button type="button" class="btn btn-dark">3</button>
 	    <button type="button" class="btn btn-dark">4</button>
