@@ -36,6 +36,13 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     db.close()
     update_max_class_ids(new_id)
 
+    db = connect('Data/general.db')
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
+    c.execute('INSERT INTO codes VALUES(%d,\"%s\")' % (new_id,code))
+    db.commit()
+    db.close()
+    
 
 def add_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
@@ -97,6 +104,17 @@ def get_user_classes(user_id):
         kv_split = c.split(':')
         classes[kv_split[0]] = kv_split[1]
     return classes
+
+
+def user_join_class(user_id,class_code):
+    db = connect('Data/general.db')
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
+    res = c.execute('SELECT class_id FROM codes WHERE class_code==\"%s\")' % (class_code)).fetchall()
+    if len(res) == 0:
+        return False
+    add_user_to_class(res[0][0],user_id)
+    return True
     
     
 def add_user_to_class(class_id,user_id):
