@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+  </head>
+
+  <body>
+    <div class="logout">
+      <a href="/logout/" class="btn btn-link">Log out</a>
+    </div>
+
+    <div class="full container-fluid">
+
+      <h1>My Courses</h1>
+      <div class="card">
+	<div class="card-header">
+	  <form class="form-inline" action="/student_home/" method="POST">
+	    <div class="form-group mx-sm-3">
+	      <input type="password" class="form-control" id="magic_code" name="magic_code" placeholder="Course code">
+	    </div>
+	    <button type="submit" class="btn btn-primary">Join course</button>
+	  </form>
+	</div>
+
+	<div class="btn-group-vertical" role="group">
+	  {% for c in course_names %}
+	  <a href="/review/{{c}}" class="btn btn-dark btn-lg btn-block">{{ course_names[c] }}</a>
+	  {% endfor %}
+
+	</div><!--end GROUP-->
+
+      </div>
+  </body>
+</html>
