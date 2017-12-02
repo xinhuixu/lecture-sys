@@ -192,6 +192,8 @@ def get_reviews(class_id,date):
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
@@ -235,6 +237,8 @@ def get_week_reviews(class_id,date):
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
@@ -279,6 +283,8 @@ def get_month_reviews(class_id,date):
     
     for entry in res:
         info = {}
+        info['date'] = entry[0]
+        info['time'] = entry[1]
         info['user'] = entry[4]
         info['comments'] = entry[3]
         score_list = entry[2].split(',')
