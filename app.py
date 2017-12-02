@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, url_for
-from utils import auth, classes_manager
+from utils import auth, class_manager
 import sqlite3
 import os
 
@@ -9,10 +9,18 @@ app.config.from_object(__name__)
 @app.route('/')
 def mainpage(): 
     if 'username' in session:
-        return render_template('index.html', user = session['username'])
+        if auth.get_user_type() == 'student':
+            return render_template('student_home.html', user = session['username'])
+        elif auth.get_user_type() == 'teacher':
+            return render_template('teacher_home.html', user = session['username'])
+        else:
+            return 'Error';
     else:
-        return render_template(url_for('login'))
+        return render_template('login.html')
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return "Error"
 
 @app.route('/register/', methods = ['Get','Post'])
 def register_page():
@@ -30,13 +38,11 @@ def register_page():
 
 
 
-@app.route('user/<username>/student')
-def studentPage():
-    
+@app.route('/user/<username>/student')
+def studentPage():    
     return render_template('student_home.html', user = session['username'])
 
-
-@app.route('user/<username>/teacher')
+@app.route('/user/<username>/teacher')
 def teacherPage():
     return render_template('teacher_home.html', user = session['username'])
 
@@ -52,7 +58,7 @@ def review():
     
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
