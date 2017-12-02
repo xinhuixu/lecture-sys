@@ -15,18 +15,9 @@ def mainpage():
     if 'username' in session:
         print "IN SESSION NOW: " + session['username']
         if auth.get_user_type(session['username']) == 'student':
-            user = session['username']
-            courses = cm.get_user_classes(auth.get_id_from_username(user))
-            course_names = {c:get_class_info(c)['class_name'] for c in courses}
-            print course_names
-            return render_template('student_home.html', user=user, course_names = course_names)
-        
+            return redirect('student_home')
         elif auth.get_user_type(session['username']) == 'teacher':
-            user = session['username']
-            courses = cm.get_user_classes(auth.get_id_from_username(user))
-            course_names = {c:get_class_info(c)['class_name'] for c in courses}
-            print course_names
-            return render_template('teacher_home.html', user=user, course_names=course_names)
+            return redirect('teacher_home')
         else:
             return 'Error'
     else:
@@ -54,13 +45,34 @@ def register():
 
 
 
-@app.route('/user/<username>/student')
-def studentPage():    
-    return render_template('student_home.html', user = session['username'])
+@app.route('/student_home/',methods=['GET','POST'])
+def student_home():
+    if 'username' not in session:
+        return redirect('/')
 
-@app.route('/user/<username>/teacher')
-def teacherPage():
-    return render_template('teacher_home.html', user = session['username'])
+    user = session['username']
+    if request.method == 'POST':
+        course_id = request.form['magic_code']
+        cm.user_join_class(auth.get_id_from_username(user), course_id)
+        print "class joined: "+course_id
+
+    courses = cm.get_user_classes(auth.get_id_from_username(user))
+    course_names = {c:get_class_info(c)['class_name'] for c in courses}
+    print course_names            
+    return render_template('student_home.html', user=user, course_names = course_names)
+
+
+@app.route('/teacher_home/')
+def teacher_home():
+    if 'username' not in session:
+        return redirect('/')
+    user = session['username']
+    courses = cm.get_user_classes(auth.get_id_from_username(user))
+    course_names = {c:get_class_info(c)['class_name'] for c in courses}
+    print course_names
+    return render_template('teacher_home.html', user=user, course_names=course_names)
+
+
 
 
 @app.route('/review/<class_id>')
