@@ -11,7 +11,7 @@ def get_new_class_id():
     return res+1
 
 
-def update_class_ids(new_id):
+def update_max_class_ids(new_id):
     db = connect('Data/general.db')
     c = db.cursor()
     c.execute('UPDATE class_ids SET id=%d WHERE id==%d' % (new_id,new_id-1))
@@ -32,11 +32,11 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     c.execute('INSERT INTO info VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"\")' % (class_name,instructor_name,days,time_start,time_end))
     db.commit()    
     db.close()
-    update_class_ids(new_id)
+    update_max_class_ids(new_id)
 
 
 def add_review_category(class_id,category):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     res = c.execute('SELECT categories from info').fetchall()[0][0]
     if res == '':
@@ -49,7 +49,7 @@ def add_review_category(class_id,category):
 
 
 def delete_review_category(class_id,category):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     res = c.execute('SELECT categories from info').fetchall()[0][0]
     category_list = res.split(',')
@@ -59,20 +59,63 @@ def delete_review_category(class_id,category):
     db.close()
 
 
+def get_class_info(class_id):
+    db = connect('Data/%d.db' % (class_id))
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
+    res = c.execute('SELECT * from info').fetchall()[0]
+    info = {}
+    info['class_name'] = res[0]
+    info['instructor_name'] = res[1]
+    info['days'] = res[2].split(',')
+    info['time_start'] = res[3]
+    info['time_end'] = res[4]
+    info['categories'] = res[5].split(',')
+
+
+def get_user_classes(user_id):
+    db = connect('Data/general.db')
+    c = db.cursor()
+    res = c.execute('SELECT class_ids from users WHERE user_id==%d' % (user_id)).fetchall()
+    if len(res) == 0:
+        return None
+    classes = {}
+    split_info = res[0].split(',')
+    for c in split_info:
+        kv_split = c.split(':')
+        classes[kv_split[0]] = kv_split[1]
+    return classes
+    
+    
 def add_user_to_class(class_id,user_id):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS students(user_id INTEGER, class_user_id)')
-    res = c.execute('SELECT MAX(class_user_id) from students').fetchall()[0][0]
-    if res == None:
+    max_id = c.execute('SELECT MAX(class_user_id) from students').fetchall()[0][0]
+    if max_id == None:
         c.execute('INSERT INTO students VALUES(%d,%d)' % (user_id,0))
     else:
-        c.execute('INSERT INTO students VALUES(%d,%d)' % (user_id,res+1))
+        c.execute('INSERT INTO students VALUES(%d,%d)' % (user_id,max_id+1))
     db.commit()
     db.close()
+
+    db = connect('Data/general.db')
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS users(username STRING, password STRING, user_type STRING, email STRING, user_id INTEGER, class_ids STRING)')
+    res = c.execute('SELECT class_ids from users WHERE user_id==%d' % (user_id)).fetchall()
+    if len(res) == 0:
+        return 'Error'
+
+    if res[0][0] == '':
+        new_class_ids = '%d:%d' % (class_id,max_id+1)
+    else:
+        new_class_ids = res[0][0] + ',%d:%d' % (class_id,max_id+1)
+
+    c.execute('UPDATE users SET class_ids=\"%s\" WHERE user_id==%d' % (new_class_ids,user_id))
+        
     
 def get_class_user_id(class_id,user_id):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS students(user_id INTEGER, class_user_id)')
     res = c.execute('SELECT class_user_id from students WHERE user_id==%d' % (user_id)).fetchall()
@@ -83,7 +126,7 @@ def get_class_user_id(class_id,user_id):
     
 #assuming scores is dictionary
 def add_review(class_id,scores,comments,user_id):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
     res = c.execute('SELECT categories from info').fetchall()[0][0]
@@ -128,7 +171,7 @@ def get_first_class_date(date,days):
 #assuming date is is yyyy-mm-dd format
 #mode is day/week/month
 def get_reviews(class_id,date,mode='day'):
-    db = connect('Data/%s.db' % (class_id))
+    db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews(date STRING, time STRING, scores STRING, comments STRING, class_user_id INTEGER)')
@@ -192,7 +235,7 @@ add_review_category(0,'relevance')
 add_review_category(0,'clarity')
 delete_review_category(0,'relevance')
 
-
+#these users need to be created first
 add_user_to_class(0,123)
 add_user_to_class(0,345)
 add_user_to_class(0,666)
