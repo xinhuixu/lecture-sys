@@ -117,6 +117,13 @@ def add_course():
         return redirect('/')
     else:
         return render_template('add_course.html')
+
+@app.route('/class_data/<class_id>')
+def class_data():
+    if 'username' not in session:
+        return redirect('/')
+    info = cm.get_class_info(int(class_id))    
+    return render_template('class_home.html', info=info, cid=class_id );
     
 
 @app.route('/login/', methods=['GET', 'POST'])
