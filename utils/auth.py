@@ -7,6 +7,7 @@ f = 'Data/general.db'
 def add_user(username,password,user_type,email):
 
     if username == '' or password == '' or user_type == '' or email == '' or username == None or password == None or user_type == None or email == None:
+        print "LMFAL"        
         return False
 
     db = connect(f)
@@ -15,7 +16,6 @@ def add_user(username,password,user_type,email):
     
     if len(c.execute('SELECT * FROM users WHERE username==\"%s\"' % (username)).fetchall()) >= 1:
         return False
-
     
     max_id = c.execute('SELECT MAX(user_id) FROM users').fetchall()[0][0]
     if max_id == None:
@@ -26,6 +26,7 @@ def add_user(username,password,user_type,email):
     c.execute('INSERT INTO users VALUES(\"%s\",\"%s\",\"%s\",\"%s\",%d,\"")' % (username,hash_p,user_type,email,max_id+1))
     db.commit()
     db.close()
+    print "USER ADDED"
     return True
 
 def login(username,password):
@@ -47,7 +48,7 @@ def login(username,password):
 def get_id_from_username(username):
     db = connect(f)
     c = db.cursor()
-    res = c.execute('SELECT user_id from users WHERE username==/"%s/"' % (username)).fetchall()
+    res = c.execute('SELECT user_id from users WHERE username==\"%s\"' % (username)).fetchall()
 
     if len(res) == 0:
         return None

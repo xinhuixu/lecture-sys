@@ -124,10 +124,13 @@ def get_user_classes(user_id):
     if len(res) == 0:
         return None
     classes = {}
-    split_info = res[0].split(',')
-    for c in split_info:
-        kv_split = c.split(':')
-        classes[kv_split[0]] = kv_split[1]
+    print "RES[0]: "+str(res[0][0])
+    if str(res[0][0]) != "":        
+        split_info = str(res[0][0]).split(',')
+        for c in split_info:
+            kv_split = c.split(':')        
+            classes[kv_split[0]] = kv_split[1]
+            
     return classes
 
 
