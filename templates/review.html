@@ -14,15 +14,15 @@
 	  <div class="card" style="width:25rem">
 	    <div class="card-header">
 
-	      <h3>Review <span class="text-secondary">(Class is live!)</span></h3>
+	      <h3>Review {% if live %}<span class="text-secondary">(Class is live!)</span>{% endif %}</h3>
 	    </div>
 	    <div class="card-body">
 	      
 	      <div class="d-flex justify-content-between">
 		<h4 class="card-title">Course name</h4>
 		<div class="d-flex flex-column">
-		  <h6 class="card-subtitle mb-2 text-muted">Instructor: Billy</h6>
-		  <h6 class="card-subtitle mb-2 text-muted">Meets: MWR11</h6>
+		  <h6 class="card-subtitle mb-2 text-muted">Instructor: {{info["instructor_name"]}}</h6>
+		  <h6 class="card-subtitle mb-2 text-muted">Meets: {{info["days"]}} {{info["time_start"]}}-{{info["time_end"]}}</h6>
 		</div>
 	      </div>
 	      <br>
