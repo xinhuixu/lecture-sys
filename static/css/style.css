@@ -17,22 +17,8 @@ body {
     align-items: center;
 }
 
-.btn-group {
-    width:100%;
-}
-
 .btn {
-    width: 50%;
     font-weight: bold;
-}
-
-#login-header {
-    font-family: "HEADER";
-    font-size: 3em;
-    font-style: italic;
-}
-
-#login {
 }
 
 .vertical-flex {
