@@ -144,7 +144,7 @@ def user_join_class(user_id,class_code):
     db = connect('Data/general.db')
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
-    res = c.execute('SELECT class_id FROM codes WHERE class_code==\"%s\")' % (class_code)).fetchall()
+    res = c.execute('SELECT class_id FROM codes WHERE class_code==\"%s\"' % (class_code)).fetchall()
     if len(res) == 0:
         return False
     add_user_to_class(res[0][0],user_id)
@@ -170,6 +170,8 @@ def add_user_to_class(class_id,user_id):
     c.execute('CREATE TABLE IF NOT EXISTS users(username STRING, password STRING, user_type STRING, email STRING, user_id INTEGER, class_ids STRING)')
     res = c.execute('SELECT class_ids from users WHERE user_id==%d' % (user_id)).fetchall()
 
+    print res
+    
     if len(res) == 0:
         return 'Error'
 
@@ -178,7 +180,12 @@ def add_user_to_class(class_id,user_id):
     else:
         new_class_ids = res[0][0] + ',%d:%d' % (class_id,max_id)
 
+    print new_class_ids
+    
     c.execute('UPDATE users SET class_ids=\"%s\" WHERE user_id==%d' % (new_class_ids,user_id))
+
+    db.commit()
+    db.close()
         
     
 def get_class_user_id(class_id,user_id):
