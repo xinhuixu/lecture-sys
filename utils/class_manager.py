@@ -40,7 +40,7 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
     c.execute('INSERT INTO codes VALUES(%d,\"%s\")' % (new_id,code))
-    res = c.execute('SELECT class_ids from users WHERE username==\"%s\"' % (instructor)).fetchall()
+    res = c.execute('SELECT class_ids from users WHERE username==\"%s\"' % (instructor_name)).fetchall()
 
     if len(res) == 0:
         return 'Error'
