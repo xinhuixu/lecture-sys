@@ -36,11 +36,39 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     db.close()
     update_max_class_ids(new_id)
 
+    db = connect('Data/general.db')
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
+    c.execute('INSERT INTO codes VALUES(%d,\"%s\")' % (new_id,code))
+    res = c.execute('SELECT class_ids from users WHERE username==\"%s\"' % (instructor)).fetchall()
+
+    if len(res) == 0:
+        return 'Error'
+
+    if res[0][0] == '':
+        new_class_ids = '%d:%d' % (new_id,-1)
+    else:
+        new_class_ids = res[0][0] + ',%d:%d' % (new_id,-1)
+    
+    db.commit()
+    db.close()
+    
+
+def get_categories(class_id):
+    db = connect('Data/%d.db' % (class_id))
+    c = db.cursor()
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return None
+    return res[0][0]
 
 def add_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    res = c.execute('SELECT categories from info').fetchall()[0][0]
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return False
+    res = res[0][0]
     if res == '':
         new_categories = category
     else:
@@ -48,18 +76,21 @@ def add_review_category(class_id,category):
     c.execute('UPDATE info SET categories=\"%s\" WHERE categories==\"%s\"' % (new_categories,res))
     db.commit()
     db.close()
-
+    return True
 
 def delete_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    res = c.execute('SELECT categories from info').fetchall()[0][0]
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return False
+    res = res[0][0]
     category_list = res.split(',')
     new_categories = ','.join(c for c in category_list if str(c) != category)
     c.execute('UPDATE info SET categories=\"%s\" WHERE categories==\"%s\"' % (new_categories,res))
     db.commit()
     db.close()
-
+    return True
 
 def get_class_info(class_id):
     db = connect('Data/%d.db' % (class_id))
@@ -100,6 +131,17 @@ def get_user_classes(user_id):
             classes[kv_split[0]] = kv_split[1]
             
     return classes
+
+
+def user_join_class(user_id,class_code):
+    db = connect('Data/general.db')
+    c = db.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS codes(class_id INTEGER, class_code STRING)')
+    res = c.execute('SELECT class_id FROM codes WHERE class_code==\"%s\")' % (class_code)).fetchall()
+    if len(res) == 0:
+        return False
+    add_user_to_class(res[0][0],user_id)
+    return True
     
     
 def add_user_to_class(class_id,user_id):
