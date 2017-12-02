@@ -57,7 +57,7 @@ def student_home():
         print "class joined: "+course_id
 
     courses = cm.get_user_classes(auth.get_id_from_username(user))
-    course_names = {c:get_class_info(c)['class_name'] for c in courses}
+    course_names = {c:cm.get_class_info(c)['class_name'] for c in courses}
     print course_names            
     return render_template('student_home.html', user=user, course_names = course_names)
 
@@ -68,7 +68,7 @@ def teacher_home():
         return redirect('/')
     user = session['username']
     courses = cm.get_user_classes(auth.get_id_from_username(user))
-    course_names = {c:get_class_info(c)['class_name'] for c in courses}
+    course_names = {c:cm.get_class_info(c)['class_name'] for c in courses}
     print course_names
     return render_template('teacher_home.html', user=user, course_names=course_names)
 
