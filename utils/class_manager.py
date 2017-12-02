@@ -55,7 +55,10 @@ def get_categories(class_id):
 def add_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    res = c.execute('SELECT categories from info').fetchall()[0][0]
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return False
+    res = res[0][0]
     if res == '':
         new_categories = category
     else:
@@ -63,18 +66,21 @@ def add_review_category(class_id,category):
     c.execute('UPDATE info SET categories=\"%s\" WHERE categories==\"%s\"' % (new_categories,res))
     db.commit()
     db.close()
-
+    return True
 
 def delete_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))
     c = db.cursor()
-    res = c.execute('SELECT categories from info').fetchall()[0][0]
+    res = c.execute('SELECT categories from info').fetchall()
+    if len(res) == 0:
+        return False
+    res = res[0][0]
     category_list = res.split(',')
     new_categories = ','.join(c for c in category_list if str(c) != category)
     c.execute('UPDATE info SET categories=\"%s\" WHERE categories==\"%s\"' % (new_categories,res))
     db.commit()
     db.close()
-
+    return True
 
 def get_class_info(class_id):
     db = connect('Data/%d.db' % (class_id))
