@@ -72,14 +72,27 @@ def teacher_home():
     print course_names
     return render_template('teacher_home.html', user=user, course_names=course_names)
 
-@app.route('/review/<class_id>')
+@app.route('/review/<class_id>', methods=['GET','POST'])
 def review(class_id):
     if 'username' not in session:
         return redirect('/');
-   
-    info = cm.get_class_info(int(class_id))
-    info['days'] = '-'.join(d for d in info['days'])
-    return render_template('review.html', info=info, live=cm.is_class_in_session(int(class_id)));        
+
+    cats = cm.get_categories(int(class_id)) #list of categories
+    
+    if request.method == "GET":
+        info = cm.get_class_info(int(class_id))
+        info['days'] = '-'.join(d for d in info['days'])
+        return render_template('review.html', info=info, live=cm.is_class_in_session(int(class_id)), categories=cats, cid=class_id);
+    else:
+        #build dictionary of scores for each category
+        scores = {}
+        for c in cats:
+            scores[c] = int(request.form[c])
+        comment = request.form["comment"] or ""
+        user_id = auth.get_id_from_username(session["username"])
+        cm.add_review(int(class_id),scores,comment,user_id)
+        return redirect(url_for('student_home'))
+        
 
 #teacher only!
 @app.route('/class_home/<class_id>')

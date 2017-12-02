@@ -14,7 +14,9 @@
 	  <div class="card" style="width:25rem">
 	    <div class="card-header">
 
-	      <h3>Review {% if live %}<span class="text-secondary">(Class is live!)</span>{% endif %}</h3>
+	      <h3>Lecture Review <span class="text-secondary">{% if live %}(Class is live!)
+		  {% else %}(Class is off)
+		  {% endif %}</h3>
 	    </div>
 	    <div class="card-body">
 	      
@@ -26,58 +28,64 @@
 		</div>
 	      </div>
 	      <br>
-	      <form name="review" action="/home" method="POST">
+	      <form name="review" action="/review/{{cid}}" method="POST">
 
+		{% for cat in categories %}
+		
 		<div class="form-group row">
-		  <label for="radio-group" class="col-sm-4 col-form-label">Category1</label>
-		  <div class="col-sm-8" id="radio-group">
-		    
+		  <label for="radio-group" class="col-sm-4 col-form-label">
+		    {{cat}}
+		  </label>
+		  <div class="col-sm-8" id="radio-group">		    
 		    <div class="form-check form-check-inline">
 		      <label class="form-check-label">
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" required> 1
+			<input class="form-check-input" type="radio" name="{{cat}}" id="{{cat}}option1" value="1" required> 
 		      </label>
 		    </div>
 		    <div class="form-check form-check-inline">
 		      <label class="form-check-label">
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" required> 2
+			<input class="form-check-input" type="radio" name="{{cat}}" id="{{cat}}option2" value="2" required> 
 		      </label>
 		    </div>
 		    <div class="form-check form-check-inline">
 		      <label class="form-check-label">
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" required> 3
+			<input class="form-check-input" type="radio" name="{{cat}}" id="{{cat}}option3" value="3" required> 
 		      </label>
 		    </div>
 		    <div class="form-check form-check-inline">
 		      <label class="form-check-label">
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" required> 4
+			<input class="form-check-input" type="radio" name="{{cat}}" id="{{cat}}option4" value="4" required> 
 		      </label>
 		    </div>
 		    <div class="form-check form-check-inline">
 		      <label class="form-check-label">
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" required> 5
+			<input class="form-check-input" type="radio" name="{{cat}}" id="{{cat}}option5" value="5" required> 
 		      </label>
 		    </div>
 		  </div>
 		</div>
+		
+		{% endfor %}
 
-		<!--BEGIN ADDITIONAL COMMENTS-->
-		<div class="form-group">
-		  <div><label for="exampleFormControlTextarea1">Addtional comment <span class="text-secondary">(Optional)</span></label></div>
-		  <textarea class="form-control" id="comment" rows="3"></textarea>
-		</div>
-		  <div class="form-check">
-		    <label class="form-check-label">
-		      <input type="checkbox" class="form-check-input" id="anon" checked>
-		      Anonymous
-		    </label>
-		  </div>
-		  
-		<a href="#" class="btn btn-primary btn-lg btn-block">Submit</a>
-	      </form>
-	    </div>	
-	  </div>
+
+	    <!--BEGIN ADDITIONAL COMMENTS-->
+	    <div class="form-group">
+	      <div><label for="exampleFormControlTextarea1">Addtional comment <span class="text-secondary">(Optional)</span></label></div>
+	      <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+	    </div>
+	    <div class="form-check">
+	      <label class="form-check-label">
+		<input type="checkbox" class="form-check-input" id="anon" checked>
+		Anonymous
+	      </label>
+	    </div>
+	    
+	    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+	    </form>
+	  </div>	
 	</div>
       </div>
     </div>
-  </body>
+
+</body>
 </html>
