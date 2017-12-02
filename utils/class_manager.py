@@ -34,7 +34,7 @@ def create_class(class_name,instructor_name,days,time_start,time_end):
     db = connect('Data/%d.db' % (new_id))
     c = db.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS info(class_name STRING, instructor_name STRING, days STRING, time_start STRING, time_end STRING,categories STRING,code STRING)')
-    c.execute('INSERT INTO info VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"\",\"%s\")' % (class_name,instructor_name,days,time_start,time_end,code))
+    c.execute('INSERT INTO info VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"Speed,Clarity,Volume\",\"%s\")' % (class_name,instructor_name,days,time_start,time_end,code))
     db.commit()    
     db.close()
     update_max_class_ids(new_id)
@@ -66,7 +66,7 @@ def get_categories(class_id):
     res = c.execute('SELECT categories from info').fetchall()
     if len(res) == 0:
         return None
-    return res[0][0]
+    return str(res[0][0]).split(",")
 
 def add_review_category(class_id,category):
     db = connect('Data/%d.db' % (class_id))

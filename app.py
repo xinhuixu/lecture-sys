@@ -72,9 +72,6 @@ def teacher_home():
     print course_names
     return render_template('teacher_home.html', user=user, course_names=course_names)
 
-
-
-
 @app.route('/review/<class_id>')
 def review(class_id):
     if 'username' not in session:

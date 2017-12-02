@@ -17,10 +17,10 @@
 	  <a href="/add_course" class="btn btn-primary" role="button">New course</a><br>
 	  <div class="btn-group-vertical" role="group">
 	  {% for c in course_names %}
-	    <a href="/class_home/{{c}}" class="btn btn-dark">{{ course_names[c] }}</button>
-	    {% endfor %}
-	  </div><!--end GROUP-->
-
+	  <a href="/class_home/{{c}}" class="btn btn-dark">{{ course_names[c] }}</button>
+          {% endfor %}
+          </div><!--end GROUP-->
     </div>
+
   </body>
 </html>
