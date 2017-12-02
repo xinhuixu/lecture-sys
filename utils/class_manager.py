@@ -104,7 +104,8 @@ def get_class_info(class_id):
     info['time_start'] = res[3]
     info['time_end'] = res[4]
     info['categories'] = res[5].split(',')
-
+    info['code'] = res[6]
+    return info
 
 def is_class_in_session(class_id):
     db = connect('Data/%d.db' % (class_id))
