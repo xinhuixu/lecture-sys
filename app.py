@@ -138,8 +138,7 @@ def class_data(class_id):
     if request.method == 'GET':
         date = str(datetime.datetime.now().date())
     else:
-        print request.form['date']
-        date = '2017-12-02' #        date = request.form['date']
+        date = request.form['date']
 
     data_month = cm.get_reviews(int(class_id),date,'month')
     #data_week = [e for e in date_month[0] if e['date'] <= '%s %s' % (str(cm.get_first_class_date(date,info['days']).date()),info['time_start'])]
