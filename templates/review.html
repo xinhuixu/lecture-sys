@@ -34,8 +34,19 @@
 	      <br>
 	      <form name="review" action="/review/{{cid}}" method="POST">
 
-		{% for cat in categories %}
-		
+		<div class="row">
+		  <div class="col-sm-4">
+
+		  </div>
+		  <div class="col-sm-8">
+		    <div class="d-flex justify-content-around">
+		      <span class="text-muted" style="font-size:70%" >Unsatisfactory</span>
+		      <span class="text-muted" style="font-size:70%">Neutral</span>
+		      <span class="text-muted"  style="font-size:70%">Excellent</span>
+		    </div>
+		  </div>
+		</div>
+		{% for cat in categories %}		
 		<div class="form-group row">
 		  <label for="radio-group" class="col-sm-4 col-form-label">
 		    {{cat}}
