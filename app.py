@@ -147,8 +147,7 @@ def class_data(class_id):
    # data_week = (data_week,{e['score'] for e in data_week)
     data_week = cm.get_reviews(int(class_id),date,'week')
     data_day = cm.get_reviews(int(class_id),date,'day')
-                 
-        
+    
     return render_template('class_data.html', info=info, cid=class_id, categories=cats,data_day=data_day,data_week=data_week,data_month=data_month,date=date);
     
 
