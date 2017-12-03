@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['TimeFrame', 'speed', 'clarity', 'volume'], //x values
+          ["Jun 4th - Jun 6th" , average, average, average] //y values
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Performance over the course',
+            subtitle: 'Performance indicators in course,
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+    </script>
+  </head>
+  <body>
+    <div id="columnchart_material" style="width: 800px; height: 500px;"></div>
+  </body>
+</html>
+
+
+  ## cm.add_review(int(class_id),scores,comment,user_id)
+  ## get scores from @app.route('/review/<class_id>', methods=['GET','POST']) 
