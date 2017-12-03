@@ -49,7 +49,56 @@
 
 	      
 	    </div><!--END TAB-CONTENT-->
-	  </div>
+ 	  </div><!--END CARD 1-->
+
+	  <div class="card"><!--REVIEWS-->
+	    <p> this is the reviews</p>
+
+	  </div><!--END CARD 2: REVIEWS-->
+
+	  <div class="card"><!--WEEKLY-->
+	    <p><ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+		  <a class="nav-link active" href="#weekly_overall" role="tab" data-toggle="tab">Overall</a>
+		</li>
+		{% for cat in categories %}
+		<li class="nav-item">
+		  <a class="nav-link" href="#weekly_{{cat}}" role="tab" data-toggle="tab">{{cat}}</a>
+		</li>
+		{% endfor %}
+	    </ul></p>
+
+	    <div class="tab-content">
+	      <!--OVERALL-->
+	      <div role="tabpanel" class="tab-pane fade in active show" id="weekly_overall">
+		<p>WEEKLY: This is overall bar graph</p>
+	      </div><!--end overall-->
+
+	      <!--FOR EACH CATEGORY{{cat}}-->
+	      {% for cat in categories %}
+	      <div role="tabpanel" class="tab-pane fade in" id="weekly_{{cat}}">
+
+	      <p>WEEKLY: this is {{cat}}'s graph</p>
+	      </div>
+	      {% endfor %}<!--end category{{cat}}-->
+	      
+	    </div><!--END TAB-CONTENT-->
+	  </div><!--END CARD 3: WEEKLY-->
+
+	  <div class="card"><!--MONTHLY-->
+	    <ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+		  <a class="nav-link active" href="#Overall" role="tab" data-toggle="tab">Overall</a>
+		</li>
+	    </ul>
+	    <div class="tab-content">
+	      <!--OVERALL-->
+	      <div role="tabpanel" class="tab-pane fade in active show" id="month_overall">
+		<p>MONTHLY: This is overall bar graph</p>
+	      </div><!--end overall-->
+	    </div><!--end tab-content-->
+	   
+	  </div><!--END CARD 3: MONTHLY-->
 	</div>
       </div>
     </div>
