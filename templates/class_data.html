@@ -32,7 +32,10 @@
 	
 	<div class="card-body">
 	  <div class="card">
-	    <p><ul class="nav nav-tabs" role="tablist">
+	    <div class="text-left">
+	      <h3 class="card-title text-left data-title">Today</h3>
+	    </div>
+	    <ul class="nav nav-tabs" role="tablist">
 	      <li class="nav-item">
 		<a class="nav-link active" href="#Overall" role="tab" data-toggle="tab">Overall</a>
 	      </li>
@@ -41,7 +44,7 @@
 	      <a class="nav-link" href="#{{cat}}" role="tab" data-toggle="tab">{{cat}}</a>
 	      </li>
 	      {% endfor %}
-	    </ul></p>
+	    </ul>
 
 	    <div class="tab-content">
 	      <!--OVERALL-->
@@ -74,12 +77,18 @@
  	  </div><!--END CARD 1-->
 
 	  <div class="card"><!--REVIEWS-->
+	    <div class="card-title text-left data-title">
+	      <h3>All reviews</h3>
+	    </div>
 	    <p> this is the reviews</p>
 
 	  </div><!--END CARD 2: REVIEWS-->
 
 	  <div class="card"><!--WEEKLY-->
-	    <p><ul class="nav nav-tabs" role="tablist">
+	    <div class="card-title text-left data-title">
+	      <h3>Weekly data</h3>
+	    </div>
+	    <ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
 		  <a class="nav-link active" href="#weekly_overall" role="tab" data-toggle="tab">Overall</a>
 		</li>
@@ -88,7 +97,7 @@
 		  <a class="nav-link" href="#weekly_{{cat}}" role="tab" data-toggle="tab">{{cat}}</a>
 		</li>
 		{% endfor %}
-	    </ul></p>
+	    </ul>
 
 	    <div class="tab-content">
 	      <!--OVERALL-->
@@ -121,6 +130,9 @@
 	  </div><!--END CARD 3: WEEKLY-->
 
 	  <div class="card"><!--MONTHLY-->
+	    <div class="card-title text-left data-title">
+	      <h3>All reviews</h3>
+	    </div>
 	    <ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
 		  <a class="nav-link active" href="#Overall" role="tab" data-toggle="tab">Overall</a>

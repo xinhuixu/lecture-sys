@@ -58,3 +58,8 @@ body {
 a {
     color: #1b36cc;
 }
+
+.data-title {
+    padding:1rem;
+    margin-bottom:0px;
+}
