@@ -80,8 +80,29 @@
 	    <div class="card-title text-left data-title">
 	      <h3>All reviews</h3>
 	    </div>
-	    <p> this is the reviews</p>
+	    <div>
+	      <table class="table">
+		<tr>
+		  <th>Date</th>
+		  <th>Time</th>
+		  {% for cat in categories %}
+		  <th>{{cat}}</th>
+		  {% endfor %}
+		  <th>Comment</th>
+		</tr>		  
+		{% for entry in data_day[0] %}
+		<tr>
+		  <td>{{entry['date']}}</td><td>{{entry['time']}}</td>
+		  {% for cat in categories %}
+		  <td>{{entry['scores'][cat]}}</td>
+		  {% endfor %}
+		  <td>{{entry['comments']}}</td>
+		</tr>
+		{% endfor %}
+		
+		</table>
 
+	    </div>
 	  </div><!--END CARD 2: REVIEWS-->
 
 	  <div class="card"><!--WEEKLY-->
@@ -131,7 +152,7 @@
 
 	  <div class="card"><!--MONTHLY-->
 	    <div class="card-title text-left data-title">
-	      <h3>All reviews</h3>
+	      <h3>Monthly data</h3>
 	    </div>
 	    <ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
