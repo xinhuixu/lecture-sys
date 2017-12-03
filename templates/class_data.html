@@ -19,7 +19,13 @@
       
       <div class="card" style="width:90%">
 	<div class="card-header">
-	  <h1>{{info['class_name']}}</h1>
+	  <h1>{{info['class_name']}} 	  <h6 class="card-subtitle mb-2 text-muted">Meets:
+	    {% for d in info['days'] %}
+	    {{d}}
+	    {% endfor %}
+	    {{info['time_start']}}-{{info['time_end']}}</h6>
+</h1>
+
 	</div>
 
 	<div class="card-header">
