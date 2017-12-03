@@ -46,17 +46,29 @@
 	    <div class="tab-content">
 	      <!--OVERALL-->
 	      <div role="tabpanel" class="tab-pane fade in active show" id="Overall">
-		<p>This is overall bar graph</p>
+		{% for c in data_day[1] %}
+		<p>{{c}}: {{data_day[1][c]}}</p>
+		{% endfor %}
 	      </div><!--end overall-->
 
 	      <!--FOR EACH CATEGORY{{cat}}-->
 	      {% for cat in categories %}
 	      <div role="tabpanel" class="tab-pane fade in" id="{{cat}}">
-
-	      <p>this is {{cat}}'s graph</p>
+		<table class="table">
+		  <tr>
+		    <th>Date</th>
+		    <th>Time</th>
+		    <th>Score</th>
+		  </tr>
+		  
+		{% for entry in data_day[0] %}
+		<tr><td>{{entry['date']}}</td><td>{{entry['time']}}</td><td>{{entry['scores'][cat]}}</td></tr>
+		{% endfor %}
+		
+		</table>
+		
 	      </div>
 	      {% endfor %}<!--end category{{cat}}-->
-
 	      
 	    </div><!--END TAB-CONTENT-->
  	  </div><!--END CARD 1-->
@@ -81,14 +93,27 @@
 	    <div class="tab-content">
 	      <!--OVERALL-->
 	      <div role="tabpanel" class="tab-pane fade in active show" id="weekly_overall">
-		<p>WEEKLY: This is overall bar graph</p>
+		{% for c in data_week[1] %}
+		<p>{{c}}: {{data_week[1][c]}}</p>
+		{% endfor %}
 	      </div><!--end overall-->
 
 	      <!--FOR EACH CATEGORY{{cat}}-->
 	      {% for cat in categories %}
 	      <div role="tabpanel" class="tab-pane fade in" id="weekly_{{cat}}">
 
-	      <p>WEEKLY: this is {{cat}}'s graph</p>
+		<table class="table">
+		  <tr>
+		    <th>Date</th>
+		    <th>Time</th>
+		    <th>Score</th>
+		  </tr>
+		  
+		{% for entry in data_week[0] %}
+		<tr><td>{{entry['date']}}</td><td>{{entry['time']}}</td><td>{{entry['scores'][cat]}}</td></tr>
+		{% endfor %}
+		
+		</table>
 	      </div>
 	      {% endfor %}<!--end category{{cat}}-->
 	      
@@ -104,7 +129,9 @@
 	    <div class="tab-content">
 	      <!--OVERALL-->
 	      <div role="tabpanel" class="tab-pane fade in active show" id="month_overall">
-		<p>MONTHLY: This is overall bar graph</p>
+		{% for c in data_month[1] %}
+		<p>{{c}}: {{data_month[1][c]}}</p>
+		{% endfor %}
 	      </div><!--end overall-->
 	    </div><!--end tab-content-->
 	   
