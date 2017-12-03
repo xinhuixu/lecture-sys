@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, url_for, redirect
 from utils import auth
 from utils import class_manager as cm
 import sqlite3
-import os
+import os, datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(64)
@@ -128,14 +128,28 @@ def add_course():
     else:
         return render_template('add_course.html')
 
-@app.route('/class_data/<class_id>')
+@app.route('/class_data/<class_id>',methods=['GET','POST'])
 def class_data(class_id):
     if 'username' not in session:
         return redirect('/')
     info = cm.get_class_info(int(class_id))
     cats = cm.get_categories(int(class_id)) #list of categories
-    
-    return render_template('class_data.html', info=info, cid=class_id, categories=cats );
+
+    if request.method == 'GET':
+        date = str(datetime.datetime.now().date())
+    else:
+        date = request.form['date']
+
+    data_month = cm.get_reviews(int(class_id),date,'month')
+    #data_week = [e for e in date_month[0] if e['date'] <= '%s %s' % (str(cm.get_first_class_date(date,info['days']).date()),info['time_start'])]
+    #data_today = [e for e in date_week[0] if e['date'] <= '%s %s' % (date,info['time_start'])]
+
+   # data_week = (data_week,{e['score'] for e in data_week)
+    data_week = cm.get_reviews(int(class_id),date,'week')
+    data_day = cm.get_reviews(int(class_id),date,'day')
+                 
+        
+    return render_template('class_data.html', info=info, cid=class_id, categories=cats,data_day=data_day,data_week=data_week,data_month=data_month,date=date);
     
 
 @app.route('/login/', methods=['GET', 'POST'])

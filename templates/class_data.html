@@ -15,9 +15,19 @@
     </div>
 
     <div class="full container-fluid">
+
+      <form method="POST">
+	<input type="date" name="date">
+	<input type="submit" value="Choose Date">
+      </form>
+      
       <div class="card" style="width:90%">
 	<div class="card-header">
 	  <h1>{{info['class_name']}}</h1>
+	</div>
+
+	<div class="card-header">
+	  <h1>{{date}}</h1>
 	</div>
 	
 	<div class="card-body">
@@ -103,6 +113,35 @@
       </div>
     </div>
 
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      //google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart(div_name, averages) {
+      var data = google.visualization.arrayToDataTable([
+      
+          ['TimeFrame', 'Speed', 'Clarity', 'Volume'], //x values
+          ["Jun 4th - Jun 6th" , average, average, average] //y values
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Performance over the course',
+            subtitle: 'Performance indicators in course,
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById(div_id));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+
+      drawChart("overall",{{data_day[1]}});
+      
+    </script>
+    
 </body>
 
 
