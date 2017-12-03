@@ -12,18 +12,26 @@
       </div>
 
     <div class="full container-fluid">
-      
-	  <h1>My Courses</h1>
-	  <a href="/add_course" class="btn btn-primary" role="button">New course</a><br>
-	  <div class="card" style="width:20rem">
-	  <div class="btn-group-vertical" role="group">
-	    {% for c in course_names %}
-	  <a href="/class_home/{{c}}" class="btn btn-dark btn-lg btn-block">{{ course_names[c] }}</a>
-{% endfor %}
+      <div class="card" style="width:20rem">      
+	<div class="card-header">
+	  <h2>My Courses</h2>
+	</div> <!--CLOSE HEADER-->
 
+	<div class="card-body" style="padding-bottom:0px">
+	  <p><a href="/add_course" class="btn btn-primary" role="button">New course</a></p>
+	</div>
+
+	<div class="card-body" style="padding-top:0px;">
+	  <div class="btn-group-vertical" role="group" style="width:100%;">
+	    {% for c in course_names %}
+	    <a href="/class_home/{{c}}" class="btn btn-dark btn-lg btn-block">{{ course_names[c] }}</a>
+	    {% endfor %}
 	  </div>
-	  </div>
-       </div>
+	</div>
+
+	</div>
+      </div><!--CLOSE CARD-->
+    </div>
 
 
 </body>

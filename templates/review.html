@@ -7,6 +7,10 @@
   </head>
 
   <body>
+    <div class="logout">
+      <a href="/logout/" class="btn btn-link">Log out</a>
+    </div>
+
     <div class="full container-fluid">
       <div class="row">
 	<div class="col-sm-12">
@@ -21,7 +25,7 @@
 	    <div class="card-body">
 	      
 	      <div class="d-flex justify-content-between">
-		<h4 class="card-title">Course name</h4>
+		<h4 class="card-title">{{info["class_name"]}}</h4>
 		<div class="d-flex flex-column">
 		  <h6 class="card-subtitle mb-2 text-muted">Instructor: {{info["instructor_name"]}}</h6>
 		  <h6 class="card-subtitle mb-2 text-muted">Meets: {{info["days"]}} {{info["time_start"]}}-{{info["time_end"]}}</h6>

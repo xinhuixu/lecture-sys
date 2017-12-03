@@ -1,12 +1,12 @@
 body {
     color: black;
     text-align: center;
+    background: #466368;
+    background: -webkit-linear-gradient(#c6dcff, #95a6f9);
+    background:    -moz-linear-gradient(#c6dcff, #95a6f9);
+    background:         linear-gradient(#c6dcff, #95a6f9);
 }
 
-.home-form {
-    width: 85%;
-    margin: auto;
-}
 
 .full {
     background-size: cover;
@@ -48,4 +48,13 @@ body {
     position: absolute;
     top: 5%;
     right: 5%;
+}
+
+.btn-primary {
+    background-color: #1c36cc;
+    border-color: #1b36cc;
+}
+
+a {
+    color: #1b36cc;
 }
