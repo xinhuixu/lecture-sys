@@ -132,8 +132,10 @@ def add_course():
 def class_data(class_id):
     if 'username' not in session:
         return redirect('/')
-    info = cm.get_class_info(int(class_id))    
-    return render_template('class_data.html', info=info, cid=class_id );
+    info = cm.get_class_info(int(class_id))
+    cats = cm.get_categories(int(class_id)) #list of categories
+    
+    return render_template('class_data.html', info=info, cid=class_id, categories=cats );
     
 
 @app.route('/login/', methods=['GET', 'POST'])
