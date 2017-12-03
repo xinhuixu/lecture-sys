@@ -15,9 +15,19 @@
     </div>
 
     <div class="full container-fluid">
+
+      <form method="POST">
+	<input type="date" name="date">
+	<input type="submit" value="Choose Date">
+      </form>
+      
       <div class="card" style="width:90%">
 	<div class="card-header">
 	  <h1>{{info['class_name']}}</h1>
+	</div>
+
+	<div class="card-header">
+	  <h1>{{date}}</h1>
 	</div>
 	
 	<div class="card-body">

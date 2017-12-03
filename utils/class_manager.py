@@ -224,7 +224,10 @@ def get_next_class_date(date,days):
     weekday_num_to_str = {0:'M',1:'T',2:'W',3:'R',4:'F',5:'S',6:'U'}
     weekday_str_to_num = {'M':0,'T':1,'W':2,'R':3,'F':4,'S':5,'U':6}
     date = datetime.datetime.strptime(date,'%Y-%m-%d')
-    index = days.index(weekday_num_to_str[date.weekday()])
+    weekday_num = date.weekday()
+    while weekday_num_to_str[weekday_num] not in days:
+        weekday_num-=1
+    index = days.index(weekday_num_to_str[weekday_num])
     if index == len(days)-1:
         index = 0
     else:
@@ -233,7 +236,8 @@ def get_next_class_date(date,days):
     if days_ahead <= 0:
         days_ahead += 7
     return date + datetime.timedelta(days_ahead)
-    
+
+
 def get_first_class_date(date,days):
     weekday_num_to_str = {0:'M',1:'T',2:'W',3:'R',4:'F',5:'S',6:'U'}
     weekday_str_to_num = {'M':0,'T':1,'W':2,'R':3,'F':4,'S':5,'U':6}
@@ -261,16 +265,20 @@ def get_reviews(class_id,date,mode='day'):
     categories = res[2].split(',')
     time_split = start_time.split(':')
     next_class_date = get_next_class_date(date,days)
-    next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
+    #print type(next_class_date),next_class_date
+    #next_class_date = next_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
+    next_class_date = datetime.datetime.strptime('%s %s' % (str(next_class_date.date()),start_time),'%Y-%m-%d %H:%M')
 
+    
     if mode == 'day':
         full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M'))
     elif mode == 'week':
         first_class_date = get_first_class_date(date,days)
-        first_class_date = first_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
+        #first_class_date = first_class_date.replace(hour=int(time_split[0]),minute=int(time_split[1]))
+        first_class_date = datetime.datetime.strptime('%s %s' % (str(first_class_date.date()),start_time),'%Y-%m-%d %H:%M')
         full_c_datetime_string = str(first_class_date)
     elif mode == 'month':
-        full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M')).replace(day=1)
+        full_c_datetime_string = str(datetime.datetime.strptime('%s %s' % (date,start_time),'%Y-%m-%d %H:%M').replace(day=1))
         
     full_n_datetime_string = str(next_class_date)
     res = c.execute('SELECT * from reviews WHERE date || \" \" || time >= \"%s\" AND date || \" \" || time < \"%s\"' % (full_c_datetime_string,full_n_datetime_string)).fetchall()
